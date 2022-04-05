@@ -11,10 +11,8 @@ import {
   Input,
   Modal,
 } from 'native-base';
-import {HMSConfig} from '@100mslive/react-native-hms';
+import {HMSConfig, HMSUpdateListenerActions} from '@100mslive/react-native-hms';
 import {useNavigation} from '@react-navigation/native';
-import {sign} from 'react-native-pure-jwt';
-import uuid from 'react-native-uuid';
 import {setupBuild} from '../100ms/100ms';
 
 const fetchToken = async ({roomID, userID, role}) => {
@@ -67,7 +65,7 @@ export default function JoinScreen() {
       hms
         .join(hmsConfig)
         .then(() => {
-          console.log(`${username} Joined room`);
+          console.log('joined');
         })
         .catch(error => {
           console.log('error', error);
@@ -75,6 +73,10 @@ export default function JoinScreen() {
     });
     navigation.navigate('Meeting');
   };
+
+  setupBuild().then(hms => {
+    hms.addEventListener(HMSUpdateListenerActions.ON_JOIN, joinRoom);
+  });
   //
 
   return (
