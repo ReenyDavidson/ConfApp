@@ -11,36 +11,71 @@ import {
   Input,
   Modal,
 } from 'native-base';
-import {HMSConfig, HMSUpdateListenerActions} from '@100mslive/react-native-hms';
+import {HMSConfig} from '@100mslive/react-native-hms';
+import {useNavigation} from '@react-navigation/native';
+import {sign} from 'react-native-pure-jwt';
+import uuid from 'react-native-uuid';
 import {setupBuild} from '../100ms/100ms';
+
+const fetchToken = async ({roomID, userID, role}) => {
+  const endPoint = 'https://prod-in.100ms.live/hmsapi/msteam.app.100ms.live/';
+
+  const body = {
+    room_id: roomID,
+    user_id: userID,
+    role: role,
+  };
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+
+  const response = await fetch(`${endPoint}api/token`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers,
+  });
+
+  try {
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.log("Can't get token");
+  }
+};
 
 export default function JoinScreen() {
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState('');
 
-  function joinListener() {
-    setupBuild().then(hms => {
-      hms.addEventListener(HMSUpdateListenerActions.ON_JOIN, onJoin);
+  const navigation = useNavigation();
+
+  const joinRoom = async () => {
+    const {token} = await fetchToken({
+      roomID: '623df95244ae04b51cb076a2',
+      userID: '620b4ebd6f2b876d58ef3cbd',
+      role: 'speaker',
+    }).catch(error => {
+      console.log('An error occurred:', error);
     });
-  }
+    console.log('token', token);
 
-  const HmsConfig = new HMSConfig({
-    username: username,
-    authToken:
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3Nfa2V5IjoiNjIwYjRlYmQ2ZjJiODc2ZDU4ZWYzY2JmIiwicm9vbV9pZCI6IjYyM2RmOTUyNDRhZTA0YjUxY2IwNzZhMiIsInVzZXJfaWQiOiI2MjBiNGViZDZmMmI4NzZkNThlZjNjYmMiLCJyb2xlIjoiZ3Vlc3QiLCJqdGkiOiI3MTY5NTFlZS1hMGVkLTRiYzMtYTU0ZS02NmYyMmMwMjM5ODEiLCJ0eXBlIjoiYXBwIiwidmVyc2lvbiI6MiwiZXhwIjoxNjQ4MzM1MjU2fQ.mR3r41BngKyS3_93ezgYiOV2RMRsgLVTN0aC_7hDoZ4',
-  });
+    const hmsConfig = new HMSConfig({authToken: token, username: username});
 
-  const onJoin = () => {
-    setupBuild()
-      .then(hms => {
-        const room = hms.join(HmsConfig);
-        console.log(`${username} joined`);
-        console.log(room);
-      })
-      .catch(error => {
-        console.log('Error: ', error);
-      });
+    setupBuild().then(hms => {
+      hms
+        .join(hmsConfig)
+        .then(() => {
+          console.log(`${username} Joined room`);
+        })
+        .catch(error => {
+          console.log('error', error);
+        });
+    });
+    navigation.navigate('Meeting');
   };
+  //
 
   return (
     <View
@@ -104,7 +139,7 @@ export default function JoinScreen() {
               </Button>
               <Button
                 onPress={() => {
-                  onJoin();
+                  joinRoom();
                   setShowModal(false);
                   setUsername('');
                 }}
