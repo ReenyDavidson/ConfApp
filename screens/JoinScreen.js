@@ -98,7 +98,7 @@ export default function JoinScreen() {
           w="40"
           h="10"
           borderRadius="lg">
-          <Text style={{color: '#fff', fontFamily: 'Poppins-Medium'}}>
+          <Text style={{color: '#fff', fontFamily: 'SpaceGrotesk-Medium'}}>
             Join Meeting
           </Text>
         </Button>
@@ -109,7 +109,7 @@ export default function JoinScreen() {
           borderWidth="1"
           borderColor="blue.500"
           borderRadius="lg">
-          <Text style={{fontFamily: 'Poppins-Medium', color: '#000111'}}>
+          <Text style={{fontFamily: 'SpaceGrotesk-Medium', color: '#000111'}}>
             Start New Meeting
           </Text>
         </Button>
@@ -165,7 +165,7 @@ export default function JoinScreen() {
             />
             <Text
               style={{
-                fontFamily: 'Poppins-Medium',
+                fontFamily: 'SpaceGrotesk-SemiBold',
                 fontSize: 22,
                 textAlign: 'center',
                 color: '#000111',
@@ -179,9 +179,9 @@ export default function JoinScreen() {
                 fontSize: 15,
                 paddingVertical: 10,
                 lineHeight: 21,
-                letterSpacing: 0.5,
+                letterSpacing: 0.2,
                 textAlign: 'center',
-                fontFamily: 'Poppins-Light',
+                fontFamily: 'SpaceGrotesk-Regular',
               }}>
               Only people with the link can join the meeting. You can share the
               link with your friends and colleagues.
@@ -194,7 +194,7 @@ export default function JoinScreen() {
         style={{
           textAlign: 'center',
           padding: 20,
-          fontFamily: 'Poppins-SemiBold',
+          fontFamily: 'SpaceGrotesk-SemiBold',
         }}>
         Powered by <Text style={{color: '#2196F3'}}>100ms</Text>
       </Text>

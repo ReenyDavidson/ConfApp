@@ -29,7 +29,7 @@ export default function DrawerNavigation() {
             return <Icons name={iconName} size={size} color={color} />;
           },
           drawerLabelStyle: {
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'SpaceGrotesk-Regular',
             fontSize: 16,
           },
           drawerType: 'back',
@@ -45,7 +45,7 @@ export default function DrawerNavigation() {
             headerTitle: 'Conf.',
             headerTitleAlign: 'center',
             headerTitleStyle: {
-              fontFamily: 'Poppins-Medium',
+              fontFamily: 'SpaceGrotesk-Medium',
               fontSize: 22,
               color: '#2196F3',
             },
@@ -59,10 +59,10 @@ export default function DrawerNavigation() {
           name="Meeting"
           component={MeetingScreen}
           options={{
-            headerTitle: 'Conf.',
+            headerTitle: 'Meeting Room',
             headerTitleAlign: 'center',
             headerTitleStyle: {
-              fontFamily: 'Poppins-Medium',
+              fontFamily: 'SpaceGrotesk-Medium',
               fontSize: 22,
               color: '#2196F3',
             },
