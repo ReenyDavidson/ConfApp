@@ -11,73 +11,13 @@ import {
   Input,
   Modal,
 } from 'native-base';
-import {HMSConfig, HMSUpdateListenerActions} from '@100mslive/react-native-hms';
 import {useNavigation} from '@react-navigation/native';
-import {setupBuild} from '../100ms/100ms';
-
-const fetchToken = async ({roomID, userID, role}) => {
-  const endPoint = 'https://prod-in.100ms.live/hmsapi/msteam.app.100ms.live/';
-
-  const body = {
-    room_id: roomID,
-    user_id: userID,
-    role: role,
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  };
-
-  const response = await fetch(`${endPoint}api/token`, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers,
-  });
-
-  try {
-    const responseData = await response.json();
-    return responseData;
-  } catch (error) {
-    console.log("Can't get token");
-  }
-};
 
 export default function JoinScreen() {
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState('');
 
   const navigation = useNavigation();
-
-  const joinRoom = async () => {
-    const {token} = await fetchToken({
-      roomID: '623df95244ae04b51cb076a2',
-      userID: '620b4ebd6f2b876d58ef3cbd',
-      role: 'speaker',
-    }).catch(error => {
-      console.log('An error occurred:', error);
-    });
-    console.log('token', token);
-
-    const hmsConfig = new HMSConfig({authToken: token, username: username});
-
-    setupBuild().then(hms => {
-      hms
-        .join(hmsConfig)
-        .then(() => {
-          console.log('joined');
-        })
-        .catch(error => {
-          console.log('error', error);
-        });
-    });
-    navigation.navigate('Meeting');
-  };
-
-  setupBuild().then(hms => {
-    hms.addEventListener(HMSUpdateListenerActions.ON_JOIN, joinRoom);
-  });
-  //
 
   return (
     <View
@@ -141,7 +81,7 @@ export default function JoinScreen() {
               </Button>
               <Button
                 onPress={() => {
-                  joinRoom();
+                  navigation.navigate('Meeting');
                   setShowModal(false);
                   setUsername('');
                 }}
