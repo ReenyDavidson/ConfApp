@@ -5,6 +5,7 @@ import DrawerNavigation from './navigation/DrawerNavigation';
 import HmsManager from '@100mslive/react-native-hms';
 
 import {HMSProvider} from './components/HmsContext';
+import {setupBuild} from './100ms/100ms';
 
 // Define the config
 const config = {
@@ -20,13 +21,10 @@ export default function App() {
   const hmsInstance = useRef(null);
 
   useEffect(() => {
-    HmsManager.build()
-      .then(instance => {
-        hmsInstance.current = instance;
-        setHmsInstanceLoaded(true);
-        console.log('HMS instance is loaded');
-      })
-      .catch(console.error);
+    setupBuild().then(build => {
+      hmsInstance.current = build;
+      setHmsInstanceLoaded(true);
+    });
   }, []);
 
   if (!hmsInstanceLoaded) {
@@ -34,15 +32,13 @@ export default function App() {
   }
 
   return (
-    <HMSProvider value={hmsInstance.current}>
-      <NativeBaseProvider theme={theme}>
-        {hmsInstanceLoaded ? <DrawerNavigation /> : null}
-        <StatusBar
-          barStyle={theme.dark ? 'light-content' : 'dark-content'}
-          backgroundColor={theme.dark ? '#000' : '#fff'}
-        />
-      </NativeBaseProvider>
-    </HMSProvider>
+    <NativeBaseProvider theme={theme}>
+      {hmsInstanceLoaded ? <DrawerNavigation /> : null}
+      <StatusBar
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor={theme.dark ? '#000' : '#fff'}
+      />
+    </NativeBaseProvider>
   );
 }
 

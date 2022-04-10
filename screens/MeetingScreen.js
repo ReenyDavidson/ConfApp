@@ -3,8 +3,13 @@ import {View, Text, Pressable, FlatList} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {Circle, HStack, VStack, Button} from 'native-base';
 import {HMSUpdateListenerActions, HMSConfig} from '@100mslive/react-native-hms';
-import HMSContext, {HMSProvider} from '../components/HmsContext';
+import HMSContext from '../components/HmsContext';
 import {fetchToken} from './fetchToken';
+import {setupBuild} from '../100ms/100ms';
+
+setupBuild().then(build => {
+  hmsInstance.current = build;
+});
 
 const joinRoom = async hmsInstance => {
   if (!hmsInstance) {
@@ -29,7 +34,7 @@ const joinRoom = async hmsInstance => {
 export default function MeetingScreen() {
   const [isMute, setMute] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const hmsInstance = useRef(HMSContext.Provider);
+  const hmsInstance = useRef(HMSContext);
 
   const userID = useRef('demouser').current;
 
