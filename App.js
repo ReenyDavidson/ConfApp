@@ -32,6 +32,7 @@ export default function App() {
   }
 
   return (
+<HMSProvider value={hmsInstance.current>
     <NativeBaseProvider theme={theme}>
       {hmsInstanceLoaded ? <DrawerNavigation /> : null}
       <StatusBar
@@ -39,6 +40,7 @@ export default function App() {
         backgroundColor={theme.dark ? '#000' : '#fff'}
       />
     </NativeBaseProvider>
+</HMSProvider>
   );
 }
 
