@@ -32,7 +32,7 @@ export default function App() {
   }
 
   return (
-<HMSProvider value={hmsInstance.current>
+<HMSProvider value={hmsInstance.current} >
     <NativeBaseProvider theme={theme}>
       {hmsInstanceLoaded ? <DrawerNavigation /> : null}
       <StatusBar
