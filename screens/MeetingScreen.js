@@ -28,7 +28,9 @@ const joinRoom = async hmsInstance => {
 
   const hmsConfig = new HMSConfig({authToken: token, username: '12345'});
 
-  hmsInstance.join(hmsConfig);
+  setupBuild().then(build => {
+    build.join(hmsConfig);
+  });
 };
 
 export default function MeetingScreen() {
@@ -39,12 +41,14 @@ export default function MeetingScreen() {
   const userID = useRef('demouser').current;
 
   useEffect(() => {
-    if (hmsInstance) {
-      hmsInstance.addEventListener(HMSUpdateListenerActions.ON_ERROR, data =>
+    setupBuild.then(build => {
+      build.addEventListener(HMSUpdateListenerActions.ON_ERROR, data =>
         console.error('ON_ERROR_HANDLER', data),
       );
+    });
 
-      hmsInstance.addEventListener(
+    setupBuild().then(build => {
+      build.addEventListener(
         HMSUpdateListenerActions.ON_JOIN,
         ({room, localPeer, remotePeers}) => {
           const localParticipant = {
@@ -76,13 +80,16 @@ export default function MeetingScreen() {
           setParticipants([localParticipant, ...remoteParticipants]);
         },
       );
+    });
 
-      hmsInstance.addEventListener(
-        HMSUpdateListenerActions.ON_ROOM_UPDATE,
-        data => console.log('ON ROOM UPDATE', data),
+    setupBuild().then(build => {
+      build.addEventListener(HMSUpdateListenerActions.ON_ROOM_UPDATE, data =>
+        console.log('ON ROOM UPDATE', data),
       );
+    });
 
-      hmsInstance?.addEventListener(
+    setupBuild().then(build => {
+      build.addEventListener(
         HMSUpdateListenerActions.ON_PEER_UPDATE,
         ({localPeer, remotePeers}) => {
           const localParticipant = {
@@ -114,8 +121,10 @@ export default function MeetingScreen() {
           setParticipants([localParticipant, ...remoteParticipants]);
         },
       );
+    });
 
-      hmsInstance?.addEventListener(
+    setupBuild().then(build => {
+      build.addEventListener(
         HMSUpdateListenerActions.ON_TRACK_UPDATE,
         ({localPeer, remotePeers}) => {
           const localParticipant = {
@@ -147,9 +156,9 @@ export default function MeetingScreen() {
           setParticipants([localParticipant, ...remoteParticipants]);
         },
       );
-    }
+    });
 
-    joinRoom(hmsInstance);
+    joinRoom();
   }, [hmsInstance, userID]);
 
   return (
