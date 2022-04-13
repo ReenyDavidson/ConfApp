@@ -13,11 +13,9 @@ import {
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 
-export default function JoinScreen() {
+export default function JoinScreen({navigation}) {
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState('');
-
-  const navigation = useNavigation();
 
   return (
     <View

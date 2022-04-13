@@ -3,20 +3,10 @@ import {View, Text, Pressable, FlatList} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {Circle, HStack, VStack, Button} from 'native-base';
 import {HMSUpdateListenerActions, HMSConfig} from '@100mslive/react-native-hms';
-import HMSContext from '../components/HmsContext';
 import {fetchToken} from './fetchToken';
 import {setupBuild} from '../100ms/100ms';
 
-setupBuild().then(build => {
-  hmsInstance.current = build;
-});
-
 const joinRoom = async hmsInstance => {
-  if (!hmsInstance) {
-    console.error('HMS instance is not loaded');
-    return;
-  }
-
   const {token} = await fetchToken({
     roomID: '623df95244ae04b51cb076a2',
     userID: '12345',
@@ -36,12 +26,9 @@ const joinRoom = async hmsInstance => {
 export default function MeetingScreen() {
   const [isMute, setMute] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const hmsInstance = useRef(HMSContext);
-
-  const userID = useRef('demouser').current;
 
   useEffect(() => {
-    setupBuild.then(build => {
+    setupBuild().then(build => {
       build.addEventListener(HMSUpdateListenerActions.ON_ERROR, data =>
         console.error('ON_ERROR_HANDLER', data),
       );
@@ -159,7 +146,7 @@ export default function MeetingScreen() {
     });
 
     joinRoom();
-  }, [hmsInstance, userID]);
+  }, []);
 
   return (
     <View
@@ -181,10 +168,6 @@ export default function MeetingScreen() {
             </Text>
           </Button>
         </HStack>
-        <Text fontSize="xl" fontWeight="bold">
-          Building a Twitter Space Clone in React Native using NativeBase and
-          100ms
-        </Text>
         <FlatList
           numColumns={4}
           ListEmptyComponent={<Text>Loading...</Text>}
@@ -217,8 +200,10 @@ export default function MeetingScreen() {
         <VStack space="2" justifyContent="center" alignItems="center">
           <Pressable
             onPress={() => {
-              hmsInstance.localPeer.localAudioTrack().setMute(!isMute);
-              setMute(!isMute);
+              setupBuild().then(build => {
+                build.localPeer.localAudioTrack().setMute(!isMute);
+                setMute(!isMute);
+              });
             }}>
             <Circle p="2" borderWidth="1" borderColor="coolGray.400">
               {isMute ? (
