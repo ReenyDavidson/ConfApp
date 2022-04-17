@@ -18,9 +18,7 @@ const joinRoom = async hmsInstance => {
 
   const hmsConfig = new HMSConfig({authToken: token, username: '12345'});
 
-  setupBuild().then(build => {
-    build.join(hmsConfig);
-  });
+  build.join(hmsConfig);
 };
 
 export default function MeetingScreen() {
@@ -28,122 +26,112 @@ export default function MeetingScreen() {
   const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
-    setupBuild().then(build => {
-      build.addEventListener(HMSUpdateListenerActions.ON_ERROR, data =>
-        console.error('ON_ERROR_HANDLER', data),
-      );
-    });
+    build.addEventListener(HMSUpdateListenerActions.ON_ERROR, data =>
+      console.error('ON_ERROR_HANDLER', data),
+    );
 
-    setupBuild().then(build => {
-      build.addEventListener(
-        HMSUpdateListenerActions.ON_JOIN,
-        ({room, localPeer, remotePeers}) => {
-          const localParticipant = {
-            id: localPeer?.peerID,
-            name: localPeer?.name,
-            role: localPeer?.role?.name,
+    build.addEventListener(
+      HMSUpdateListenerActions.ON_JOIN,
+      ({room, localPeer, remotePeers}) => {
+        const localParticipant = {
+          id: localPeer?.peerID,
+          name: localPeer?.name,
+          role: localPeer?.role?.name,
+          avatar: (
+            <Circle w="12" h="12" p="2" bg="blue.600">
+              {localPeer?.name?.substring(0, 2)?.toLowerCase()}
+            </Circle>
+          ),
+          isMute: localPeer?.audioTrack?.isMute(),
+        };
+
+        const remoteParticipants = remotePeers.map(remotePeer => {
+          return {
+            id: remotePeer?.peerID,
+            name: remotePeer?.name,
+            role: remotePeer?.role?.name,
             avatar: (
               <Circle w="12" h="12" p="2" bg="blue.600">
-                {localPeer?.name?.substring(0, 2)?.toLowerCase()}
+                {remotePeer?.name?.substring(0, 2)?.toLowerCase()}
               </Circle>
             ),
-            isMute: localPeer?.audioTrack?.isMute(),
+            isMute: remotePeer?.audioTrack?.isMute(),
           };
+        });
 
-          const remoteParticipants = remotePeers.map(remotePeer => {
-            return {
-              id: remotePeer?.peerID,
-              name: remotePeer?.name,
-              role: remotePeer?.role?.name,
-              avatar: (
-                <Circle w="12" h="12" p="2" bg="blue.600">
-                  {remotePeer?.name?.substring(0, 2)?.toLowerCase()}
-                </Circle>
-              ),
-              isMute: remotePeer?.audioTrack?.isMute(),
-            };
-          });
+        setParticipants([localParticipant, ...remoteParticipants]);
+      },
+    );
 
-          setParticipants([localParticipant, ...remoteParticipants]);
-        },
-      );
-    });
+    build.addEventListener(HMSUpdateListenerActions.ON_ROOM_UPDATE, data =>
+      console.log('ON ROOM UPDATE', data),
+    );
 
-    setupBuild().then(build => {
-      build.addEventListener(HMSUpdateListenerActions.ON_ROOM_UPDATE, data =>
-        console.log('ON ROOM UPDATE', data),
-      );
-    });
+    build.addEventListener(
+      HMSUpdateListenerActions.ON_PEER_UPDATE,
+      ({localPeer, remotePeers}) => {
+        const localParticipant = {
+          id: localPeer?.peerID,
+          name: localPeer?.name,
+          role: localPeer?.role?.name,
+          avatar: (
+            <Circle w="12" h="12" p="2" bg="blue.600">
+              {localPeer?.name?.substring(0, 2)?.toLowerCase()}
+            </Circle>
+          ),
+          isMute: localPeer?.audioTrack?.isMute(),
+        };
 
-    setupBuild().then(build => {
-      build.addEventListener(
-        HMSUpdateListenerActions.ON_PEER_UPDATE,
-        ({localPeer, remotePeers}) => {
-          const localParticipant = {
-            id: localPeer?.peerID,
-            name: localPeer?.name,
-            role: localPeer?.role?.name,
+        const remoteParticipants = remotePeers.map(remotePeer => {
+          return {
+            id: remotePeer?.peerID,
+            name: remotePeer?.name,
+            role: remotePeer?.role?.name,
             avatar: (
               <Circle w="12" h="12" p="2" bg="blue.600">
-                {localPeer?.name?.substring(0, 2)?.toLowerCase()}
+                {remotePeer?.name?.substring(0, 2)?.toLowerCase()}
               </Circle>
             ),
-            isMute: localPeer?.audioTrack?.isMute(),
+            isMute: remotePeer?.audioTrack?.isMute(),
           };
+        });
 
-          const remoteParticipants = remotePeers.map(remotePeer => {
-            return {
-              id: remotePeer?.peerID,
-              name: remotePeer?.name,
-              role: remotePeer?.role?.name,
-              avatar: (
-                <Circle w="12" h="12" p="2" bg="blue.600">
-                  {remotePeer?.name?.substring(0, 2)?.toLowerCase()}
-                </Circle>
-              ),
-              isMute: remotePeer?.audioTrack?.isMute(),
-            };
-          });
+        setParticipants([localParticipant, ...remoteParticipants]);
+      },
+    );
 
-          setParticipants([localParticipant, ...remoteParticipants]);
-        },
-      );
-    });
+    build.addEventListener(
+      HMSUpdateListenerActions.ON_TRACK_UPDATE,
+      ({localPeer, remotePeers}) => {
+        const localParticipant = {
+          id: localPeer?.peerID,
+          name: localPeer?.name,
+          role: localPeer?.role?.name,
+          avatar: (
+            <Circle w="12" h="12" p="2" bg="blue.600">
+              {localPeer?.name?.substring(0, 2)?.toLowerCase()}
+            </Circle>
+          ),
+          isMute: localPeer?.audioTrack?.isMute(),
+        };
 
-    setupBuild().then(build => {
-      build.addEventListener(
-        HMSUpdateListenerActions.ON_TRACK_UPDATE,
-        ({localPeer, remotePeers}) => {
-          const localParticipant = {
-            id: localPeer?.peerID,
-            name: localPeer?.name,
-            role: localPeer?.role?.name,
+        const remoteParticipants = remotePeers.map(remotePeer => {
+          return {
+            id: remotePeer?.peerID,
+            name: remotePeer?.name,
+            role: remotePeer?.role?.name,
             avatar: (
               <Circle w="12" h="12" p="2" bg="blue.600">
-                {localPeer?.name?.substring(0, 2)?.toLowerCase()}
+                {remotePeer?.name?.substring(0, 2)?.toLowerCase()}
               </Circle>
             ),
-            isMute: localPeer?.audioTrack?.isMute(),
+            isMute: remotePeer?.audioTrack?.isMute(),
           };
+        });
 
-          const remoteParticipants = remotePeers.map(remotePeer => {
-            return {
-              id: remotePeer?.peerID,
-              name: remotePeer?.name,
-              role: remotePeer?.role?.name,
-              avatar: (
-                <Circle w="12" h="12" p="2" bg="blue.600">
-                  {remotePeer?.name?.substring(0, 2)?.toLowerCase()}
-                </Circle>
-              ),
-              isMute: remotePeer?.audioTrack?.isMute(),
-            };
-          });
-
-          setParticipants([localParticipant, ...remoteParticipants]);
-        },
-      );
-    });
+        setParticipants([localParticipant, ...remoteParticipants]);
+      },
+    );
 
     joinRoom();
   }, []);
