@@ -13,9 +13,11 @@ import {
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 
-export default function JoinScreen({navigation}) {
+export default function JoinScreen() {
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState('');
+
+  const navigation = useNavigation();
 
   return (
     <View
@@ -40,19 +42,7 @@ export default function JoinScreen({navigation}) {
             Join Meeting
           </Text>
         </Button>
-        <Button
-          w="40"
-          h="10"
-          bgColor="transparent"
-          borderWidth="1"
-          borderColor="blue.500"
-          borderRadius="lg">
-          <Text style={{fontFamily: 'SpaceGrotesk-Medium', color: '#000111'}}>
-            Start New Meeting
-          </Text>
-        </Button>
       </HStack>
-
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />
